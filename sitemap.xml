@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Replace YOUR_GITHUB_PAGES_BASE_URL after deployment. -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<url><loc>YOUR_GITHUB_PAGES_BASE_URL/</loc></url>
+<url><loc>YOUR_GITHUB_PAGES_BASE_URL/block-merge-rush.html</loc></url>
+<url><loc>YOUR_GITHUB_PAGES_BASE_URL/privacy-policy.html</loc></url>
+<url><loc>YOUR_GITHUB_PAGES_BASE_URL/data-deletion.html</loc></url>
+<url><loc>YOUR_GITHUB_PAGES_BASE_URL/support.html</loc></url>
+</urlset>

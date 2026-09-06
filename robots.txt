@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+# Add Sitemap after replacing YOUR_GITHUB_PAGES_BASE_URL in sitemap.xml
