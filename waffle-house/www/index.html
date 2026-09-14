@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+<title>Waffle House V1</title>
+<style>
+:root{--bg:#24160f;--panel:#3a2117;--accent:#ffb21a;--green:#43d45b;--red:#ff5b5b;--cream:#fff2d9;--metal:#b8bec6;}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none}
+html,body{margin:0;width:100%;height:100%;background:#111;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#fff;overflow:hidden}
+body{display:flex;align-items:center;justify-content:center}
+#game{width:100vw;height:100vh;max-height:100vw*9/16;position:relative;overflow:hidden;background:linear-gradient(#7cc9ff 0 36%,#e7b56a 36% 39%,#2b1c15 39% 100%)}
+#topbar{position:absolute;left:0;top:0;right:0;height:58px;display:flex;gap:10px;align-items:center;padding:8px 12px;background:linear-gradient(#3a2016ee,#26150eee);z-index:8}
+.stat{background:#1c120de8;border:2px solid #6e4528;border-radius:14px;padding:7px 12px;font-weight:800;box-shadow:0 2px 0 #0007;white-space:nowrap}
+#xpWrap{flex:1;display:flex;align-items:center;gap:8px}.bar{height:16px;flex:1;background:#111;border-radius:9px;border:2px solid #6e4528;overflow:hidden}.fill{height:100%;background:linear-gradient(90deg,#5bdf61,#a9f04d);width:0%}
+#customers{position:absolute;left:0;right:0;top:58px;height:31%;display:flex;align-items:flex-end;justify-content:center;gap:22px;padding:4px 16px 0;background:linear-gradient(#7dc8fa,#c9ecff 70%,#8a5c39 70%,#7d4b2f)}
+.customer{width:150px;height:100%;position:relative;display:flex;align-items:flex-end;justify-content:center}.char{width:108px;height:135px;border-radius:52px 52px 22px 22px;background:linear-gradient(#ffd7b2,#efa56d);border:4px solid #3d2318;box-shadow:0 6px 0 #0005;position:relative}
+.char:before{content:"";position:absolute;left:18px;top:30px;width:18px;height:18px;border-radius:50%;background:#24150f;box-shadow:50px 0 0 #24150f}.char:after{content:"";position:absolute;left:39px;top:72px;width:30px;height:12px;border:4px solid #8d3a2f;border-top:0;border-radius:0 0 20px 20px}
+.order{position:absolute;top:0;left:0;right:0;margin:auto;width:144px;background:#fff;color:#2a1a12;border:4px solid #2d1a12;border-radius:18px;padding:8px 8px 6px;text-align:center;font-weight:800;box-shadow:0 4px 0 #0005}.order small{display:block;font-size:11px;color:#666}.patience{height:9px;background:#ddd;border-radius:8px;overflow:hidden;margin-top:6px}.patience>div{height:100%;background:linear-gradient(90deg,#45d85a,#ffcc37,#ff5e55);width:100%;transform-origin:left}
+#counter{position:absolute;left:0;right:0;bottom:0;height:61%;background:linear-gradient(#6c7278 0 9%,#35393d 9% 12%,#6d4b36 12% 100%);padding:16px 12px 12px;display:grid;grid-template-columns:1.15fr 1.8fr .9fr;gap:12px}
+.section{background:#2d2119cc;border:3px solid #17100c;border-radius:16px;padding:10px;box-shadow:inset 0 0 0 2px #7b5438,0 5px 0 #0007;min-width:0}
+.section h3{margin:0 0 8px;font-size:15px;color:#ffe3a8;text-align:center}
+#maker{height:calc(100% - 28px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px}.iron{width:95%;height:48%;background:linear-gradient(#d7dde3,#858d96);border-radius:18px;border:4px solid #202327;position:relative;box-shadow:inset 0 0 0 3px #edf2f5,0 6px 0 #0007}.iron:before{content:"";position:absolute;left:10%;right:10%;top:12%;height:54%;background:#17191b;border-radius:12px;box-shadow:inset 0 0 0 7px #292d31}.waffle{position:absolute;width:44%;aspect-ratio:1;border-radius:50%;left:28%;top:17%;background:repeating-linear-gradient(0deg,#b96f19 0 5px,#f0b84d 5px 10px);box-shadow:inset 0 0 0 6px #d98924;display:none}.iron.cooking .waffle,.iron.done .waffle,.iron.burnt .waffle{display:block}.iron.cooking .waffle{filter:saturate(.8) brightness(1.25)}.iron.burnt .waffle{filter:brightness(.45)}
+#timer{font:800 22px monospace;background:#071b08;color:#4cff67;border:3px inset #777;border-radius:8px;padding:4px 9px}.action{border:0;border-radius:14px;padding:12px 14px;font-weight:900;font-size:16px;color:#24160f;background:linear-gradient(#ffd85a,#ffae19);box-shadow:0 5px 0 #a05d05;touch-action:manipulation}.action:active{transform:translateY(3px);box-shadow:0 2px 0 #a05d05}.green{background:linear-gradient(#70ef77,#34bf48);box-shadow:0 5px 0 #147126;color:#fff}.red{background:linear-gradient(#ff8b82,#ec4747);box-shadow:0 5px 0 #8d1e1e;color:#fff}
+#ingredients{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;height:calc(100% - 28px)}.ing{position:relative;background:linear-gradient(#c8ccd0,#7d8389);border:3px solid #292d31;border-radius:13px;padding:6px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:800;font-size:12px;text-align:center}.ing .icon{font-size:29px;line-height:1}.ing.selected{outline:4px solid #69e64c;transform:translateY(-2px)}.ing.locked{filter:grayscale(1) brightness(.55)}.tag{margin-top:5px;background:#f4d799;color:#2c1a11;border-radius:6px;padding:2px 5px;font-size:11px}
+#plateWrap{height:calc(100% - 28px);display:flex;flex-direction:column;gap:9px;align-items:center;justify-content:center}.plate{width:86%;aspect-ratio:1.45;background:#f6efe4;border-radius:50%;border:6px solid #d8c8b5;position:relative;box-shadow:0 7px 0 #0004}.plateWaffle{position:absolute;width:58%;aspect-ratio:1;border-radius:50%;left:21%;top:18%;background:repeating-linear-gradient(90deg,#c77a1e 0 6px,#f0b64c 6px 12px);display:none}.topping{position:absolute;display:none}.banana{left:27%;top:30%;font-size:26px}.choco{left:41%;top:23%;font-size:30px}.sprinkle{left:33%;top:42%;font-size:26px}.serveInfo{font-size:12px;color:#ffeac1;text-align:center;min-height:30px}
+#toast{position:absolute;left:50%;top:52%;transform:translate(-50%,-50%);background:#111e;border:3px solid #fff;border-radius:16px;padding:14px 20px;font-size:22px;font-weight:900;z-index:20;opacity:0;pointer-events:none;transition:.2s}.show{opacity:1!important}
+#rotate{display:none;position:fixed;inset:0;background:#111;color:#fff;z-index:99;align-items:center;justify-content:center;text-align:center;padding:30px;font-size:22px;font-weight:800}
+@media (orientation:portrait){#rotate{display:flex}}
+@media (max-width:900px){#topbar{height:48px;padding:6px}.stat{padding:5px 8px;font-size:12px}.customer{width:120px}.char{width:88px;height:105px}.order{width:115px;font-size:11px}.order small{font-size:9px}#counter{padding:9px;gap:7px}.section{padding:6px}.section h3{font-size:12px;margin-bottom:4px}.action{padding:8px;font-size:12px}.ing .icon{font-size:22px}.tag{font-size:9px}#timer{font-size:17px}}
+</style>
+</head>
+<body>
+<div id="rotate">📱 Telefonu yatay çevir knk 😅<br><br>Waffle House V1 yatay oynanıyor.</div>
+<div id="game">
+  <div id="topbar">
+    <div class="stat">🪙 <span id="money">100</span></div>
+    <div class="stat">⭐ Seviye <span id="level">1</span></div>
+    <div id="xpWrap"><div class="bar"><div id="xpFill" class="fill"></div></div><b id="xpText">0/60 XP</b></div>
+    <div class="stat">✅ <span id="served">0</span></div>
+  </div>
+  <div id="customers"></div>
+  <div id="counter">
+    <div class="section"><h3>🔥 Waffle Makinesi</h3><div id="maker"><div id="iron" class="iron"><div class="waffle"></div></div><div id="timer">00:00</div><button id="cookBtn" class="action">Hamuru Dök</button></div></div>
+    <div class="section"><h3>🥣 Malzemeler</h3><div id="ingredients">
+      <button class="ing" data-ing="banana"><span class="icon">🍌</span><span class="tag">Muz</span></button>
+      <button class="ing" data-ing="choco"><span class="icon">🍫</span><span class="tag">Çikolata</span></button>
+      <button class="ing" data-ing="sprinkle"><span class="icon">✨</span><span class="tag">Süsleme</span></button>
+      <button class="ing locked"><span class="icon">🔒</span><span class="tag">Seviye 3</span></button>
+      <button class="ing locked"><span class="icon">🍓</span><span class="tag">Seviye 4</span></button>
+      <button class="ing locked"><span class="icon">🥝</span><span class="tag">Seviye 5</span></button>
+      <button class="ing locked"><span class="icon">🍦</span><span class="tag">Seviye 7</span></button>
+      <button class="ing locked"><span class="icon">🥜</span><span class="tag">Seviye 8</span></button>
+    </div></div>
+    <div class="section"><h3>🍽️ Hazırlama</h3><div id="plateWrap"><div class="plate"><div id="plateWaffle" class="plateWaffle"></div><div id="tBanana" class="topping banana">🍌</div><div id="tChoco" class="topping choco">🍫</div><div id="tSprinkle" class="topping sprinkle">✨</div></div><div id="serveInfo" class="serveInfo">Önce waffle'ı pişir.</div><button id="serveBtn" class="action green">Servis Et</button><button id="clearBtn" class="action red">Tabağı Temizle</button></div></div>
+  </div>
+  <div id="toast"></div>
+</div>
+<script>
+const recipes=[
+ {name:'Muzlu Çikolata',ings:['banana','choco'],emoji:'🍌🍫'},
+ {name:'Çikolata Süs',ings:['choco','sprinkle'],emoji:'🍫✨'},
+ {name:'Muzlu Süs',ings:['banana','sprinkle'],emoji:'🍌✨'},
+ {name:'Full Waffle',ings:['banana','choco','sprinkle'],emoji:'🍌🍫✨'}
+];
+let state={money:100,xp:0,level:1,served:0,cook:'idle',cookStart:0,plate:false,toppings:new Set(),customers:[]};
+const $=s=>document.querySelector(s); const $$=s=>[...document.querySelectorAll(s)];
+function toast(t){const el=$('#toast');el.textContent=t;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),900)}
+function xpNeed(){return 60+(state.level-1)*35}
+function updateHUD(){ $('#money').textContent=state.money;$('#level').textContent=state.level;$('#served').textContent=state.served;let n=xpNeed();$('#xpText').textContent=`${state.xp}/${n} XP`;$('#xpFill').style.width=Math.min(100,state.xp/n*100)+'%';while(state.xp>=n){state.xp-=n;state.level++;toast('⭐ Seviye '+state.level+'!');n=xpNeed();}}
+function spawnCustomer(){if(state.customers.length>=4)return;let r=recipes[Math.floor(Math.random()*recipes.length)];let id=Date.now()+Math.random();let patience=100;state.customers.push({id,r,patience});renderCustomers()}
+function renderCustomers(){let box=$('#customers');box.innerHTML='';state.customers.forEach((c,i)=>{let d=document.createElement('div');d.className='customer';d.innerHTML=`<div class="order">${c.r.emoji}<small>${c.r.name}</small><div class="patience"><div style="width:${c.patience}%"></div></div></div><div class="char" style="filter:hue-rotate(${i*35}deg)"></div>`;box.appendChild(d)})}
+setInterval(()=>{state.customers.forEach(c=>c.patience-=.8);let before=state.customers.length;state.customers=state.customers.filter(c=>c.patience>0);if(state.customers.length<before){toast('😤 Müşteri gitti!');state.money=Math.max(0,state.money-5)}renderCustomers();if(state.customers.length<3&&Math.random()<.5)spawnCustomer()},1000);
+setInterval(spawnCustomer,3200);spawnCustomer();spawnCustomer();spawnCustomer();
+function resetPlate(){state.plate=false;state.toppings.clear();$('#plateWaffle').style.display='none';['#tBanana','#tChoco','#tSprinkle'].forEach(s=>$(s).style.display='none');$('#serveInfo').textContent="Önce waffle'ı pişir.";$$('.ing').forEach(x=>x.classList.remove('selected'))}
+function placeWaffle(){state.plate=true;$('#plateWaffle').style.display='block';$('#serveInfo').textContent='Malzemeleri seç.';toast('🧇 Waffle tabağa alındı')}
+$('#cookBtn').onclick=()=>{if(state.cook==='idle'){state.cook='cooking';state.cookStart=Date.now();$('#iron').className='iron cooking';$('#cookBtn').textContent='Pişiyor...';toast('🔥 Pişirme başladı')}else if(state.cook==='done'||state.cook==='burnt'){placeWaffle();state.cook='idle';$('#iron').className='iron';$('#cookBtn').textContent='Hamuru Dök';$('#timer').textContent='00:00'}else toast('Biraz daha bekle 😅')}
+setInterval(()=>{if(state.cook!=='cooking')return;let s=(Date.now()-state.cookStart)/1000;$('#timer').textContent='00:'+String(Math.floor(s)).padStart(2,'0');if(s>=5&&s<8){state.cook='done';$('#iron').className='iron done';$('#cookBtn').textContent='Waffle’ı Al';toast('✅ Tam kıvamında!')}else if(s>=8){state.cook='burnt';$('#iron').className='iron burnt';$('#cookBtn').textContent='Yanmış Waffle’ı Al';toast('🔥 Biraz yandı!')}},200);
+$$('.ing[data-ing]').forEach(b=>b.onclick=()=>{if(!state.plate){toast('Önce waffle lazım');return}let k=b.dataset.ing;if(state.toppings.has(k)){state.toppings.delete(k);b.classList.remove('selected')}else{state.toppings.add(k);b.classList.add('selected')}$('#t'+k[0].toUpperCase()+k.slice(1)).style.display=state.toppings.has(k)?'block':'none';$('#serveInfo').textContent='Seçilen: '+[...state.toppings].join(', ')});
+$('#clearBtn').onclick=()=>{resetPlate();toast('🧽 Tabak temizlendi')};
+$('#serveBtn').onclick=()=>{if(!state.plate){toast('Servis edecek waffle yok');return}if(!state.customers.length){toast('Müşteri yok');return}let top=[...state.toppings].sort().join('|');let idx=state.customers.findIndex(c=>c.r.ings.slice().sort().join('|')===top);if(idx<0){toast('❌ Sipariş yanlış');state.money=Math.max(0,state.money-3);resetPlate();return}let c=state.customers[idx];let reward=10+Math.floor(c.patience/12);state.money+=reward;state.xp+=12;state.served++;state.customers.splice(idx,1);toast(`✅ +${reward}₺  +12 XP`);resetPlate();updateHUD();renderCustomers();setTimeout(spawnCustomer,800)};
+updateHUD();
+</script>
+</body>
+</html>
