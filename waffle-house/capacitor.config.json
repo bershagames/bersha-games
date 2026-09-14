@@ -1,0 +1,8 @@
+{
+  "appId": "com.bershagames.wafflehouse",
+  "appName": "Waffle House",
+  "webDir": "www",
+  "server": {
+    "androidScheme": "https"
+  }
+}
