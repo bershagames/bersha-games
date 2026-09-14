@@ -1,0 +1,76 @@
+name: Waffle House Android APK
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'waffle-house/**'
+      - '.github/workflows/waffle-house-apk.yml'
+
+jobs:
+  build-apk:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'gradle'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install Capacitor dependencies
+        working-directory: waffle-house
+        run: npm install --no-audit --no-fund
+
+      - name: Create Android project
+        working-directory: waffle-house
+        run: npx cap add android
+
+      - name: Sync web app to Android
+        working-directory: waffle-house
+        run: npx cap sync android
+
+      - name: Force landscape orientation
+        working-directory: waffle-house
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('android/app/src/main/AndroidManifest.xml')
+          s = p.read_text()
+          marker = 'android:name=".MainActivity"'
+          if 'android:screenOrientation="landscape"' not in s:
+              s = s.replace(marker, marker + '\n            android:screenOrientation="landscape"')
+          p.write_text(s)
+          PY
+
+      - name: Build debug APK
+        working-directory: waffle-house/android
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleDebug
+
+      - name: Prepare APK artifact
+        run: |
+          mkdir -p dist
+          cp waffle-house/android/app/build/outputs/apk/debug/app-debug.apk dist/Waffle-House-V1-debug.apk
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: Waffle-House-V1-APK
+          path: dist/Waffle-House-V1-debug.apk
+          if-no-files-found: error
+          retention-days: 30
